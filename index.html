@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Validação de E-mail via Planilha Google</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    let userEmail = "";
+    const CLIENT_ID = 'SEU_CLIENT_ID_GOOGLE';
+    const SHEET_ID = 'ID_DA_SUA_PLANILHA';
+    const SHEET_NAME = 'NomeDaAba'; // Por exemplo: Sheet1
+
+    function handleCredentialResponse(response) {
+      const jwt = parseJwt(response.credential);
+      userEmail = jwt.email;
+      document.getElementById("email").innerText = `Logado como: ${userEmail}`;
+      checkEmailInSheet();
+    }
+
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(decodeURIComponent(escape(window.atob(base64))));
+    }
+
+    function checkEmailInSheet() {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:A?key=SUA_API_KEY`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const emails = data.values.flat();
+          if (emails.includes(userEmail)) {
+            document.getElementById("result").innerText = "✅ E-mail encontrado na planilha!";
+          } else {
+            document.getElementById("result").innerText = "❌ E-mail NÃO encontrado na planilha.";
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao acessar a planilha:', error);
+          document.getElementById("result").innerText = "Erro ao verificar planilha.";
+        });
+    }
+
+    window.onload = () => {
+      google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.renderButton(
+        document.getElementById("buttonDiv"),
+        { theme: "outline", size: "large" }
+      );
+    };
+  </script>
+</head>
+<body>
+  <h2>Login com Google e Verificação de E-mail</h2>
+  <div id="buttonDiv"></div>
+  <p id="email"></p>
+  <p id="result" style="font-weight: bold;"></p>
+</body>
+</html>
