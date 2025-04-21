@@ -6,9 +6,9 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     let userEmail = "";
-    const CLIENT_ID = 'SEU_CLIENT_ID_GOOGLE';
-    const SHEET_ID = 'ID_DA_SUA_PLANILHA';
-    const SHEET_NAME = 'NomeDaAba'; // Por exemplo: Sheet1
+    const CLIENT_ID = '720643158008-h8amvg4fo3tan90dbhdnfh4bsktb4qgv.apps.googleusercontent.com';
+    const SHEET_ID = '1G9qfzZc-AfDQdt5x8doNsQzeOEyXUbGWOzMPIOzrytQ';
+    const SHEET_NAME = 'login'; // Por exemplo: Sheet1
 
     function handleCredentialResponse(response) {
       const jwt = parseJwt(response.credential);
@@ -24,7 +24,7 @@
     }
 
     function checkEmailInSheet() {
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:A?key=SUA_API_KEY`;
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:A?key=AIzaSyAiUcAlkdg3qPln6MzxRO0TGyJnLcjocP0`;
 
       fetch(url)
         .then(response => response.json())
