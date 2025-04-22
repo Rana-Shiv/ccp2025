@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Turmas</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    input[type="text"] { width: 100%; }
+  </style>
+</head>
+<body>
+  <h2>Gerenciamento de Turmas</h2>
+  <p id="email"></p>
+  <table id="turmasTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descrição</th>
+        <th>Ativo</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const SHEET_ID = '1G9qfzZc-AfDQdt5x8doNsQzeOEyXUbGWOzMPIOzrytQ';
+    const SHEET_NAME = 'turmas';
+    const API_KEY = 'AIzaSyAiUcAlkdg3qPln6MzxRO0TGyJnLcjocP0';
+
+    const userEmail = new URLSearchParams(window.location.search).get('email');
+    document.getElementById("email").innerText = `Logado como: ${userEmail}`;
+
+    const tableBody = document.querySelector("#turmasTable tbody");
+
+    function loadTurmas() {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values || [];
+          tableBody.innerHTML = "";
+          for (let i = 1; i < rows.length; i++) {
+            const [id, descricao, ativo] = rows[i];
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+              <td>${id}</td>
+              <td><input type="text" value="${descricao}" onchange="updateDescricao(${i + 1}, this.value)" /></td>
+              <td><input type="checkbox" ${ativo === "TRUE" ? "checked" : ""} onchange="updateStatus(${i + 1}, this.checked)" /></td>
+            `;
+
+            tableBody.appendChild(tr);
+          }
+        });
+    }
+
+    function updateDescricao(row, value) {
+      updateSheetCell(`B${row}`, value);
+    }
+
+    function updateStatus(row, value) {
+      updateSheetCell(`C${row}`, value ? "TRUE" : "FALSE");
+    }
+
+    function updateSheetCell(cell, value) {
+      fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!${cell}?valueInputOption=RAW&key=${API_KEY}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ values: [[value]] })
+      }).then(res => {
+        if (!res.ok) alert("Erro ao atualizar célula");
+      });
+    }
+
+    loadTurmas();
+  </script>
+</body>
+</html>
