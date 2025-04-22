@@ -32,6 +32,9 @@
           const emails = data.values.flat();
           if (emails.includes(userEmail)) {
             document.getElementById("result").innerText = "✅ E-mail encontrado na planilha!";
+            setTimeout(() => {
+            window.location.href = "turmas.html?email=" + encodeURIComponent(userEmail);
+            }, 1000);
           } else {
             document.getElementById("result").innerText = "❌ E-mail NÃO encontrado na planilha.";
           }
