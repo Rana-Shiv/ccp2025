@@ -30,7 +30,7 @@ header h1 {
 }
 
 .login-button {
-  background-color: #BD6282;
+  background-color: #D32F2F; /* vermelho mais vivo */
   color: white;
   border: none;
   padding: 10px 20px;
@@ -42,7 +42,7 @@ header h1 {
 
 .login-button:hover,
 .login-button:focus {
-  background-color: #9c4c6a;
+  background-color: #B71C1C;
 }
 
 /* Hero com frase e fundo */
@@ -65,7 +65,7 @@ header h1 {
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(30, 31, 95, 0.75);
+  background-color: rgba(30, 31, 95, 0.85); /* contraste reforçado */
   z-index: 0;
 }
 
