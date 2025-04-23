@@ -9,33 +9,33 @@
     th { background-color: #f2f2f2; }
     input[type="text"] { width: 90%; }
     button { padding: 5px 10px; }
-    
-  #toast-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-  }
 
-  .toast {
-    padding: 12px 20px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    color: white;
-    font-weight: bold;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    opacity: 0.95;
-    animation: slideIn 0.3s ease forwards;
-  }
+    /* Toast styles */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
 
-  .toast.success { background-color: #4CAF50; }
-  .toast.error { background-color: #F44336; }
+    .toast {
+      padding: 12px 20px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      opacity: 0.95;
+      animation: slideIn 0.3s ease forwards;
+    }
 
-  @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 0.95; }
-  }
+    .toast.success { background-color: #4CAF50; }
+    .toast.error { background-color: #F44336; }
 
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 0.95; }
+    }
   </style>
 </head>
 <body>
@@ -59,8 +59,23 @@
   </label>
   <button onclick="criarTurma()">Criar</button>
 
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzNAdJOz1ovHeNPiIJpHDo2yWJZfhXALXNphXCRApIhTFJfezyVYIMN_ioSY3Zu823TwA/exec';
+    const scriptURL = 'https://script.google.com/macros/s/SEU_SCRIPT_ID/exec';
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerText = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
 
     function carregarTurmas() {
       fetch(scriptURL)
@@ -71,19 +86,18 @@
           for (let i = 1; i < data.length; i++) {
             const [id, descricao, status] = data[i];
             const row = document.createElement('tr');
-
             row.innerHTML = `
               <td>${id}</td>
               <td><input type="text" value="${descricao}" onchange="atualizar(${id}, this.value, null)"></td>
-              <td>
-                <input type="checkbox" ${status ? 'checked' : ''} onchange="atualizar(${id}, null, this.checked)">
-              </td>
-              <td>
-                <button onclick="atualizar(${id}, document.querySelectorAll('tr')[${i}].children[1].children[0].value, document.querySelectorAll('tr')[${i}].children[2].children[0].checked)">Salvar</button>
-              </td>
+              <td><input type="checkbox" ${status === true ? 'checked' : ''} onchange="atualizar(${id}, null, this.checked)"></td>
+              <td><button onclick="atualizar(${id}, document.querySelectorAll('tr')[${i}].children[1].children[0].value, document.querySelectorAll('tr')[${i}].children[2].children[0].checked)">Salvar</button></td>
             `;
             tbody.appendChild(row);
           }
+        })
+        .catch(error => {
+          console.error('Erro ao carregar turmas:', error);
+          showToast("Erro ao carregar turmas!", "error");
         });
     }
 
@@ -97,14 +111,24 @@
 
       fetch(scriptURL, { method: 'POST', body: params })
         .then(res => res.text())
-        .then(() => carregarTurmas());
+        .then(() => {
+          showToast("Turma atualizada com sucesso!", "success");
+          carregarTurmas();
+        })
+        .catch(error => {
+          console.error('Erro ao atualizar turma:', error);
+          showToast("Erro ao atualizar turma!", "error");
+        });
     }
 
     function criarTurma() {
       const descricao = document.getElementById('novaDescricao').value;
       const status = document.getElementById('novaStatus').checked;
 
-      if (!descricao) return alert("Descrição é obrigatória!");
+      if (!descricao) {
+        showToast("Descrição é obrigatória!", "error");
+        return;
+      }
 
       const params = new URLSearchParams({
         action: 'create',
@@ -115,28 +139,18 @@
       fetch(scriptURL, { method: 'POST', body: params })
         .then(res => res.text())
         .then(() => {
+          showToast("Turma criada com sucesso!", "success");
           document.getElementById('novaDescricao').value = '';
           document.getElementById('novaStatus').checked = true;
           carregarTurmas();
+        })
+        .catch(error => {
+          console.error('Erro ao criar turma:', error);
+          showToast("Erro ao criar turma!", "error");
         });
     }
 
     window.onload = carregarTurmas;
-    function showToast(message, type = 'success') {
-  const container = document.getElementById('toast-container');
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.innerText = message;
-
-  container.appendChild(toast);
-
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
-}
-
   </script>
-<div id="toast-container"></div>
 </body>
 </html>
