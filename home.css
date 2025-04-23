@@ -1,0 +1,137 @@
+/* Reset e base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Cabeçalho */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: linear-gradient(to right, #1E1F5F, #EA8C2D);
+  color: white;
+  width: 100%;
+}
+
+header h1 {
+  font-size: 1.5rem;
+}
+
+.login-button {
+  background-color: #BD6282;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover,
+.login-button:focus {
+  background-color: #9c4c6a;
+}
+
+/* Hero com frase e fundo */
+.hero {
+  flex: 1;
+  background: url('https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 2rem;
+  position: relative;
+  color: white;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(30, 31, 95, 0.75);
+  z-index: 0;
+}
+
+.quote-container {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+}
+
+blockquote {
+  font-size: 1.8rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+cite {
+  font-size: 1.2rem;
+  display: block;
+  color: #EA8C2D;
+  font-weight: bold;
+}
+
+/* Rodapé */
+footer {
+  background: linear-gradient(to right, #1E1F5F, #EA8C2D);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 1.2rem;
+  }
+
+  .login-button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  blockquote {
+    font-size: 1.4rem;
+  }
+
+  cite {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1rem;
+  }
+
+  .login-button {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  blockquote {
+    font-size: 1.2rem;
+  }
+
+  cite {
+    font-size: 0.9rem;
+  }
+}
