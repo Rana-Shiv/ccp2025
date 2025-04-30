@@ -17,7 +17,8 @@ body {
 /* Cabeçalho */
 header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   padding: 1rem 2rem;
   background: linear-gradient(to right, #1E1F5F, #EA8C2D);
@@ -30,7 +31,7 @@ header h1 {
 }
 
 .login-button {
-  background-color: #D32F2F; /* vermelho mais vivo */
+  background-color: #D32F2F;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -65,7 +66,7 @@ header h1 {
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(30, 31, 95, 0.85); /* contraste reforçado */
+  background-color: rgba(30, 31, 95, 0.85);
   z-index: 0;
 }
 
@@ -89,12 +90,22 @@ cite {
   font-weight: bold;
 }
 
-/* Rodapé */
+/* Centralização do botão */
+#buttonDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  margin-top: 2rem;
+}
+
+/* Rodapé fixado ao final */
 footer {
   background: linear-gradient(to right, #1E1F5F, #EA8C2D);
   color: white;
   text-align: center;
   padding: 1rem;
+  margin-top: auto;
 }
 
 /* Responsividade */
