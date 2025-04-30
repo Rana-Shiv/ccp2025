@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Colágio Cooperativista de Poá | Login</title>
+  <link rel="stylesheet" href="home.css" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     let userEmail = "";
@@ -31,12 +32,12 @@
         .then(data => {
           const emails = data.values.flat();
           if (emails.includes(userEmail)) {
-            document.getElementById("result").innerText = "✅ E-mail encontrado na planilha!";
+            document.getElementById("result").innerText = "✅ E-mail validado!";
             setTimeout(() => {
             window.location.href = "turmas.html?email=" + encodeURIComponent(userEmail);
             }, 1000);
           } else {
-            document.getElementById("result").innerText = "❌ E-mail NÃO encontrado na planilha.";
+            document.getElementById("result").innerText = "❌ E-mail NÃO autorizado, entre em contato com o administrador do sistema.";
           }
         })
         .catch(error => {
@@ -58,7 +59,10 @@
   </script>
 </head>
 <body>
-  <h2>Acesso para professores: Validação de Login Google</h2>
+  <header>
+    <h1>Colégio Cooperativista de Poá</h1>
+      <h2>Área de acesso para professores e coordenação</h2>
+  </header>
   <div id="buttonDiv"></div>
   <p id="email"></p>
   <p id="result" style="font-weight: bold;"></p>
