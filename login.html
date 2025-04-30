@@ -9,7 +9,7 @@
     let userEmail = "";
     const CLIENT_ID = '720643158008-h8amvg4fo3tan90dbhdnfh4bsktb4qgv.apps.googleusercontent.com';
     const SHEET_ID = '1G9qfzZc-AfDQdt5x8doNsQzeOEyXUbGWOzMPIOzrytQ';
-    const SHEET_NAME = 'login'; // Por exemplo: Sheet1
+    const SHEET_NAME = 'login';
 
     function handleCredentialResponse(response) {
       const jwt = parseJwt(response.credential);
@@ -34,7 +34,7 @@
           if (emails.includes(userEmail)) {
             document.getElementById("result").innerText = "✅ E-mail validado!";
             setTimeout(() => {
-            window.location.href = "turmas.html?email=" + encodeURIComponent(userEmail);
+              window.location.href = "turmas.html?email=" + encodeURIComponent(userEmail);
             }, 1000);
           } else {
             document.getElementById("result").innerText = "❌ E-mail NÃO autorizado, entre em contato com o administrador do sistema.";
@@ -61,15 +61,15 @@
 <body>
   <header>
     <h1>Colégio Cooperativista de Poá</h1>
-      <h2>Área de acesso para professores e coordenação</h2>
+    <h2>Área de acesso para professores e coordenação</h2>
   </header>
+
   <div id="buttonDiv"></div>
-  <p id="email"></p>
-  <p id="result" style="font-weight: bold;"></p>
+  <p id="email" style="text-align: center; margin-top: 1rem;"></p>
+  <p id="result" style="font-weight: bold; text-align: center;"></p>
 
   <footer>
     <p>© 2025 Shiv BI. Todos os direitos reservados.</p>
   </footer>
 </body>
-
 </html>
