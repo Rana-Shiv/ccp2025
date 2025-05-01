@@ -16,8 +16,8 @@
       <tr>
         <th>ID</th>
         <th>Descrição</th>
-        <th>Status</th>
         <th>Ano Letivo</th>
+        <th>Status</th>
         <th>Ação</th>
       </tr>
     </thead>
@@ -29,7 +29,7 @@
 <label>
   <input type="checkbox" id="novaStatus" checked> Ativo
 </label>
-<input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> <!-- NOVO -->
+<input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
 <button onclick="criarTurma()">Criar</button>
 
 
@@ -58,13 +58,13 @@
           const tbody = document.querySelector('#turmasTable tbody');
           tbody.innerHTML = '';
           for (let i = 1; i < data.length; i++) {
-            const [id, descricao, status, anoLetivo] = data[i]; // atualizado para incluir o 4º valor
+            const [id, descricao, anoLetivo, status] = data[i]; 
             const row = document.createElement('tr');
   row.innerHTML = `
     <td>${id}</td>
     <td><input type="text" value="${descricao}"></td>
+    <td><input type="text" value="${anoLetivo ?? ''}"></td> 
     <td><input type="checkbox" ${status === true ? 'checked' : ''}></td>
-    <td><input type="text" value="${anoLetivo ?? ''}"></td> <!-- novo campo -->
     <td>
       <button onclick="atualizar(
         ${id}, 
@@ -108,8 +108,8 @@
 
     function criarTurma() {
   const descricao = document.getElementById('novaDescricao').value;
-  const status = document.getElementById('novaStatus').checked;
   const anoLetivo = document.getElementById('novoAnoLetivo').value;
+  const status = document.getElementById('novaStatus').checked;
 
   if (!descricao) {
     showToast("Descrição é obrigatória!", "error");
@@ -128,8 +128,8 @@
     .then(() => {
       showToast("Turma criada com sucesso!", "success");
       document.getElementById('novaDescricao').value = '';
-      document.getElementById('novaStatus').checked = true;
       document.getElementById('novoAnoLetivo').value = '';
+      document.getElementById('novaStatus').checked = true;
       carregarTurmas();
     })
     .catch(error => {
@@ -140,7 +140,9 @@
 
 
     window.onload = carregarTurmas;
+
   </script>
+
     <footer>
     <p>© 2025 Shiv BI. Todos os direitos reservados.</p>
   </footer>
