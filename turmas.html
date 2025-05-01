@@ -24,14 +24,15 @@
     <tbody></tbody>
   </table>
 
-  <h3>Nova Turma</h3>
-<input type="text" id="novaDescricao" placeholder="Descrição">
-<label>
+ <div class="linha">
+  <h3 style="margin: 0;">Nova Turma</h3>
+  <input type="text" id="novaDescricao" placeholder="Descrição">
+  <label style="display: flex; align-items: center; gap: 5px;">
+  </label>
+  <input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
   <input type="checkbox" id="novaStatus" checked> Ativo
-</label>
-<input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
-<button onclick="criarTurma()">Criar</button>
-
+   <button onclick="criarTurma()">Criar</button>
+</div>
 
   <!-- Toast container -->
   <div id="toast-container"></div>
