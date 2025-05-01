@@ -154,3 +154,38 @@ footer {
   align-items: center;
   padding: 2rem;
 }
+/* 01/05/2025 - 10:55 */
+/* Container dos botões */
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+  padding: 2rem;
+}
+
+/* Estilo dos botões */
+.button-grid a {
+  background-color: #1E3A8A; /* Azul escuro */
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Efeito ao passar o mouse */
+.button-grid a:hover {
+  background-color: #3B82F6; /* Azul claro */
+  transform: translateY(-2px);
+}
+
+/* Efeito ao clicar */
+.button-grid a:active {
+  background-color: #2563EB; /* Azul intermediário */
+  transform: translateY(1px);
+}
+
