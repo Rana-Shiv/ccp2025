@@ -21,7 +21,7 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: linear-gradient(to right, #1E1F5F, #EA8C2D);
+  background: linear-gradient(to right, #1E3A8A, #F59E0B);
   color: white;
   width: 100%;
 }
@@ -102,7 +102,7 @@ cite {
 
 /* Rodapé fixado ao final */
 footer {
-  background: linear-gradient(to right, #1E1F5F, #EA8C2D);
+  background: linear-gradient(to right, #1E3A8A, #F59E0B);
   color: white;
   text-align: center;
   padding: 1rem;
