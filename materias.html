@@ -14,7 +14,139 @@
 
   <main>
     
-    <h2 style="text-align: center; margin-top: 1rem;">Em construção!</h2>
+     <h2>Matérias</h2>
+  <table id="materiasTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descrição</th>
+        <th>Status</th>
+        <th>Ano Letivo</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h3>Nova Matéria</h3>
+<input type="text" id="novaDescricao" placeholder="Descrição">
+<label>
+  <input type="checkbox" id="novaStatus" checked> Ativo
+</label>
+<input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
+<button onclick="criarMateria()">Criar</button>
+
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzNAdJOz1ovHeNPiIJpHDo2yWJZfhXALXNphXCRApIhTFJfezyVYIMN_ioSY3Zu823TwA/exec';
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerText = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function carregarMaterias() {
+      fetch(scriptURL)
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.querySelector('#materiasTable tbody');
+          tbody.innerHTML = '';
+          for (let i = 1; i < data.length; i++) {
+            const [id, descricao, status, anoLetivo] = data[i]; 
+            const row = document.createElement('tr');
+  row.innerHTML = `
+    <td>${id}</td>
+    <td><input type="text" value="${descricao}"></td>
+    <td><input type="checkbox" ${status === true ? 'checked' : ''}></td>
+    <td><input type="text" value="${anoLetivo ?? ''}"></td> 
+    <td>
+      <button onclick="atualizar(
+        ${id}, 
+        this.closest('tr').children[1].children[0].value, 
+        this.closest('tr').children[2].children[0].checked,
+        this.closest('tr').children[3].children[0].value
+      )">Salvar</button>
+    </td>
+  `;
+  tbody.appendChild(row);
+}
+
+        })
+        .catch(error => {
+          console.error('Erro ao carregar materias:', error);
+          showToast("Erro ao carregar matérias!", "error");
+        });
+    }
+
+    function atualizar(id, descricao, status, anoLetivo) {
+  const params = new URLSearchParams({
+    action: 'update',
+    id,
+    description: descricao ?? '',
+    status: status ?? false,
+    anoLetivo: anoLetivo ?? ''
+  });
+
+  fetch(scriptURL, { method: 'POST', body: params })
+    .then(res => res.text())
+    .then(() => {
+      showToast("Matéria atualizada com sucesso!", "success");
+      carregarMateria();
+    })
+    .catch(error => {
+      console.error('Erro ao atualizar materia:', error);
+      showToast("Erro ao atualizar matéria!", "error");
+    });
+}
+
+
+    function criarMateria() {
+  const descricao = document.getElementById('novaDescricao').value;
+  const status = document.getElementById('novaStatus').checked;
+  const anoLetivo = document.getElementById('novoAnoLetivo').value;
+
+  if (!descricao) {
+    showToast("Descrição é obrigatória!", "error");
+    return;
+  }
+
+  const params = new URLSearchParams({
+    action: 'create',
+    description: descricao,
+    status,
+    anoLetivo
+  });
+
+  fetch(scriptURL, { method: 'POST', body: params })
+    .then(res => res.text())
+    .then(() => {
+      showToast("Matéria criada com sucesso!", "success");
+      document.getElementById('novaDescricao').value = '';
+      document.getElementById('novaStatus').checked = true;
+      document.getElementById('novoAnoLetivo').value = '';
+      carregarMaterias();
+    })
+    .catch(error => {
+      console.error('Erro ao criar materia:', error);
+      showToast("Erro ao criar matéria!", "error");
+    });
+}
+
+
+    window.onload = carregarMateria;
+  </script>
+</body>
+
     
   </main>
 
