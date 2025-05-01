@@ -179,7 +179,7 @@ footer {
 
 /* Efeito ao passar o mouse */
 .button-grid a:hover {
-  background-color: #3B82F6; /* Azul claro */
+  background-color: #F59E0B; /* Laranja */
   transform: translateY(-2px);
 }
 
