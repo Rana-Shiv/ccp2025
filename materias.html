@@ -34,7 +34,7 @@
   <input type="checkbox" id="novaStatus" checked> Ativo
 </label>
 <input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
-<button onclick="criarMateria()">Criar</button>
+<button onclick="criarmaterias()">Criar</button>
 
 
   <!-- Toast container -->
@@ -55,7 +55,7 @@
       }, 3000);
     }
 
-    function carregarMaterias() {
+    function carregarmaterias() {
       fetch(scriptURL)
         .then(res => res.json())
         .then(data => {
@@ -101,16 +101,16 @@
     .then(res => res.text())
     .then(() => {
       showToast("Matéria atualizada com sucesso!", "success");
-      carregarMateria();
+      carregarmaterias();
     })
     .catch(error => {
-      console.error('Erro ao atualizar materia:', error);
+      console.error('Erro ao atualizar materias:', error);
       showToast("Erro ao atualizar matéria!", "error");
     });
 }
 
 
-    function criarMateria() {
+    function criarmaterias() {
   const descricao = document.getElementById('novaDescricao').value;
   const status = document.getElementById('novaStatus').checked;
   const anoLetivo = document.getElementById('novoAnoLetivo').value;
@@ -134,16 +134,16 @@
       document.getElementById('novaDescricao').value = '';
       document.getElementById('novaStatus').checked = true;
       document.getElementById('novoAnoLetivo').value = '';
-      carregarMaterias();
+      carregarmaterias();
     })
     .catch(error => {
-      console.error('Erro ao criar materia:', error);
+      console.error('Erro ao criar materias:', error);
       showToast("Erro ao criar matéria!", "error");
     });
 }
 
 
-    window.onload = carregarMateria;
+    window.onload = carregarmaterias;
   </script>
 </body>
 
