@@ -250,3 +250,11 @@ button {
     padding: 8px 12px;
   }
 }
+/* Rodapé fixado ao final */
+footer {
+  background: linear-gradient(to right, #1E3A8A, #F59E0B);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto;
+}
