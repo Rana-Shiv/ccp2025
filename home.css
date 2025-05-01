@@ -193,4 +193,9 @@ footer {
   transform: translateY(1px);
 }
 
+@media (max-width: 500px) {
+  .button-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
