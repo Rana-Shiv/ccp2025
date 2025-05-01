@@ -35,7 +35,7 @@
           if (emails.includes(userEmail)) {
             document.getElementById("result").innerText = "✅ E-mail validado!";
             setTimeout(() => {
-              window.location.href = "turmas.html?email=" + encodeURIComponent(userEmail);
+              window.location.href = "menu.html?email=" + encodeURIComponent(userEmail);
             }, 1000);
           } else {
             document.getElementById("result").innerText = "❌ E-mail NÃO autorizado, entre em contato com o administrador do sistema.";
