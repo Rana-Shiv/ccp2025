@@ -85,13 +85,13 @@
         });
     }
 
-    function atualizar(id, descricao, status, anoLetivo) {
+    function atualizar(id, descricao, anoLetivo, status ) {
   const params = new URLSearchParams({
     action: 'update',
     id,
     description: descricao ?? '',
-    status: status ?? false,
-    anoLetivo: anoLetivo ?? ''
+    anoLetivo: anoLetivo ?? '',
+    status: status ?? false    
   });
 
   fetch(scriptURL, { method: 'POST', body: params })
@@ -120,8 +120,8 @@
   const params = new URLSearchParams({
     action: 'create',
     description: descricao,
-    status,
-    anoLetivo
+    anoLetivo,
+    status
   });
 
   fetch(scriptURL, { method: 'POST', body: params })
