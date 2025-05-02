@@ -40,9 +40,8 @@
 
     <script>
       const scriptURL = 'https://script.google.com/macros/s/AKfycbx3oe2YKJHEkUtkkJyBRoxBKuyxn79gAksgp872Y97KId908Eey9fVliKd-qdhv4VfU/exec';
-      const sheetName = 'materias'; // Nome da aba (sheet) que queremos acessar
+      const sheetName = 'materias'; // Definindo o nome da aba "materias"
 
-      // Função para exibir o "toast" de sucesso/erro
       function showToast(message, type = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
@@ -55,9 +54,8 @@
         }, 3000);
       }
 
-      // Função para carregar as matérias
       function carregarmaterias() {
-        const url = `${scriptURL}?sheet=${sheetName}`; // Passando o nome da aba na URL
+        const url = `${scriptURL}?sheet=${sheetName}`;
         fetch(url)
           .then(res => res.json())
           .then(data => {
@@ -89,11 +87,10 @@
           });
       }
 
-      // Função para atualizar a matéria
       function atualizar(id, descricao, status, anoLetivo) {
         const params = new URLSearchParams({
           action: 'update',
-          sheet: sheetName, // Passando o nome da aba aqui também
+          sheet: sheetName,
           id,
           description: descricao ?? '',
           status: status ?? false,
@@ -101,58 +98,4 @@
         });
 
         fetch(scriptURL, { method: 'POST', body: params })
-          .then(res => res.text())
-          .then(() => {
-            showToast("Matéria atualizada com sucesso!", "success");
-            carregarmaterias();
-          })
-          .catch(error => {
-            console.error('Erro ao atualizar materias:', error);
-            showToast("Erro ao atualizar matéria!", "error");
-          });
-      }
-
-      // Função para criar nova matéria
-      function criarmaterias() {
-        const descricao = document.getElementById('novaDescricao').value;
-        const status = document.getElementById('novaStatus').checked;
-        const anoLetivo = document.getElementById('novoAnoLetivo').value;
-
-        if (!descricao) {
-          showToast("Descrição é obrigatória!", "error");
-          return;
-        }
-
-        const params = new URLSearchParams({
-          action: 'create',
-          sheet: sheetName, // Passando o nome da aba aqui também
-          description: descricao,
-          status,
-          anoLetivo
-        });
-
-        fetch(scriptURL, { method: 'POST', body: params })
-          .then(res => res.text())
-          .then(() => {
-            showToast("Matéria criada com sucesso!", "success");
-            document.getElementById('novaDescricao').value = '';
-            document.getElementById('novaStatus').checked = true;
-            document.getElementById('novoAnoLetivo').value = '';
-            carregarmaterias();
-          })
-          .catch(error => {
-            console.error('Erro ao criar materias:', error);
-            showToast("Erro ao criar matéria!", "error");
-          });
-      }
-
-      // Carregar as matérias ao carregar a página
-      window.onload = carregarmaterias;
-    </script>
-  </main>
-
-  <footer>
-    <p>© 2025 Shiv BI. Todos os direitos reservados.</p>
-  </footer>
-</body>
-</html>
+          .then(res => res.text
