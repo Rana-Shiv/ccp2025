@@ -6,10 +6,11 @@
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <header>
+  <header>
     <h1>Colégio Cooperativista de Poá</h1>
-        <button class="login-button" onclick="window.location.href='menu.html'">Voltar</button>
+    <button class="login-button" onclick="window.location.href='menu.html'">Voltar</button>
   </header>
+
   <h2>Turmas</h2>
   <table id="turmasTable">
     <thead>
@@ -24,15 +25,14 @@
     <tbody></tbody>
   </table>
 
- <div class="linha">
-  <h3 style="margin: 0;">Nova Turma</h3>
-  <input type="text" id="novaDescricao" placeholder="Descrição">
-  <label style="display: flex; align-items: center; gap: 5px;">
-  </label>
-  <input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
-  <input type="checkbox" id="novaStatus" checked> Ativo
-   <button onclick="criarTurma()">Criar</button>
-</div>
+  <div class="linha">
+    <h3 style="margin: 0;">Nova Turma</h3>
+    <input type="text" id="novaDescricao" placeholder="Descrição">
+    <label style="display: flex; align-items: center; gap: 5px;"></label>
+    <input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
+    <input type="checkbox" id="novaStatus" checked> Ativo
+    <button onclick="criarTurma()">Criar</button>
+  </div>
 
   <!-- Toast container -->
   <div id="toast-container"></div>
@@ -43,7 +43,7 @@
     function showToast(message, type = 'success') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
-      toast.className = 'toast ${type}';
+      toast.className = `toast ${type}`;
       toast.innerText = message;
       container.appendChild(toast);
       setTimeout(() => {
@@ -61,23 +61,22 @@
           for (let i = 1; i < data.length; i++) {
             const [id, descricao, anoLetivo, status] = data[i]; 
             const row = document.createElement('tr');
-  row.innerHTML = '
-    <td>${id}</td>
-    <td><input type="text" value="${descricao}"></td>
-    <td><input type="text" value="${anoLetivo ?? ''}"></td> 
-    <td><input type="checkbox" ${status === true ? 'checked' : ''}></td>
-    <td>
-      <button onclick="atualizar(
-        ${id}, 
-        this.closest('tr').children[1].children[0].value, 
-        this.closest('tr').children[2].children[0].value,
-        this.closest('tr').children[3].children[0].checked
-      )">Salvar</button>
-    </td>'
-  ;
-  tbody.appendChild(row);
-}
-
+            row.innerHTML = `
+              <td>${id}</td>
+              <td><input type="text" value="${descricao}"></td>
+              <td><input type="text" value="${anoLetivo ?? ''}"></td> 
+              <td><input type="checkbox" ${status === true ? 'checked' : ''}></td>
+              <td>
+                <button onclick="atualizar(
+                  ${id}, 
+                  this.closest('tr').children[1].children[0].value, 
+                  this.closest('tr').children[2].children[0].value,
+                  this.closest('tr').children[3].children[0].checked
+                )">Salvar</button>
+              </td>
+            `;
+            tbody.appendChild(row);
+          }
         })
         .catch(error => {
           console.error('Erro ao carregar turmas:', error);
@@ -85,66 +84,63 @@
         });
     }
 
-    function atualizar(id, descricao, anoLetivo, status ) {
-  const params = new URLSearchParams({
-    action: 'update',
-    id,
-    description: descricao ?? '',
-    anoLetivo: anoLetivo ?? '',
-    status: status ?? false    
-  });
+    function atualizar(id, descricao, anoLetivo, status) {
+      const params = new URLSearchParams({
+        action: 'update',
+        id,
+        description: descricao ?? '',
+        anoLetivo: anoLetivo ?? '',
+        status: status ?? false    
+      });
 
-  fetch(scriptURL, { method: 'POST', body: params })
-    .then(res => res.text())
-    .then(() => {
-      showToast("Turma atualizada com sucesso!", "success");
-      carregarTurmas();
-    })
-    .catch(error => {
-      console.error('Erro ao atualizar turma:', error);
-      showToast("Erro ao atualizar turma!", "error");
-    });
-}
-
+      fetch(scriptURL, { method: 'POST', body: params })
+        .then(res => res.text())
+        .then(() => {
+          showToast("Turma atualizada com sucesso!", "success");
+          carregarTurmas();
+        })
+        .catch(error => {
+          console.error('Erro ao atualizar turma:', error);
+          showToast("Erro ao atualizar turma!", "error");
+        });
+    }
 
     function criarTurma() {
-  const descricao = document.getElementById('novaDescricao').value;
-  const anoLetivo = document.getElementById('novoAnoLetivo').value;
-  const status = document.getElementById('novaStatus').checked;
+      const descricao = document.getElementById('novaDescricao').value;
+      const anoLetivo = document.getElementById('novoAnoLetivo').value;
+      const status = document.getElementById('novaStatus').checked;
 
-  if (!descricao) {
-    showToast("Descrição é obrigatória!", "error");
-    return;
-  }
+      if (!descricao) {
+        showToast("Descrição é obrigatória!", "error");
+        return;
+      }
 
-  const params = new URLSearchParams({
-    action: 'create',
-    description: descricao,
-    anoLetivo,
-    status
-  });
+      const params = new URLSearchParams({
+        action: 'create',
+        description: descricao,
+        anoLetivo,
+        status
+      });
 
-  fetch(scriptURL, { method: 'POST', body: params })
-    .then(res => res.text())
-    .then(() => {
-      showToast("Turma criada com sucesso!", "success");
-      document.getElementById('novaDescricao').value = '';
-      document.getElementById('novoAnoLetivo').value = '';
-      document.getElementById('novaStatus').checked = true;
-      carregarTurmas();
-    })
-    .catch(error => {
-      console.error('Erro ao criar turma:', error);
-      showToast("Erro ao criar turma!", "error");
-    });
-}
-
+      fetch(scriptURL, { method: 'POST', body: params })
+        .then(res => res.text())
+        .then(() => {
+          showToast("Turma criada com sucesso!", "success");
+          document.getElementById('novaDescricao').value = '';
+          document.getElementById('novoAnoLetivo').value = '';
+          document.getElementById('novaStatus').checked = true;
+          carregarTurmas();
+        })
+        .catch(error => {
+          console.error('Erro ao criar turma:', error);
+          showToast("Erro ao criar turma!", "error");
+        });
+    }
 
     window.onload = carregarTurmas;
-
   </script>
 
-    <footer>
+  <footer>
     <p>© 2025 Shiv BI. Todos os direitos reservados.</p>
   </footer>
 </body>
