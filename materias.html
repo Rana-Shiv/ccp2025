@@ -1,101 +1,147 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Colégio Cooperativista de Poá</title>
-  <link rel="stylesheet" href="styles.css" />
-</head> 
+  <meta charset="UTF-8">
+  <title>Colégio Cooperativista de Poá | Matérias</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
 <body>
   <header>
     <h1>Colégio Cooperativista de Poá</h1>
     <button class="login-button" onclick="window.location.href='menu.html'">Voltar</button>
   </header>
 
-  <main>
-    <h2>Matérias</h2>
-    <table id="materiasTable">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Descrição</th>
-          <th>Status</th>
-          <th>Ano Letivo</th>
-          <th>Ação</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <h2>Cadastro Geral de Matérias</h2>
+  <table id="materiasTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descrição</th>
+        <th>Ano Letivo</th>
+        <th>Status</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-    <h3>Nova Matéria</h3>
+  <div class="linha">
+    <h3 style="margin: 0;">Nova Matéria</h3>
     <input type="text" id="novaDescricao" placeholder="Descrição">
-    <label>
-      <input type="checkbox" id="novaStatus" checked> Ativo
-    </label>
+    <label style="display: flex; align-items: center; gap: 5px;"></label>
     <input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
-    <button onclick="criarmaterias()">Criar</button>
+    <input type="checkbox" id="novaStatus" checked> Ativo
+    <button onclick="criarMateria()">Criar</button>
+  </div>
 
-    <!-- Toast container -->
-    <div id="toast-container"></div>
+  <!-- Toast container -->
+  <div id="toast-container"></div>
 
-    <script>
-      const scriptURL = 'https://script.google.com/macros/s/AKfycby7Mv_D8cotlDhNCxJSr_KW0r6hYFTV7307QmcbfZDAStBQvH8h1lCvS1d5QAaYnxc_/exec';
-      const sheetName = 'materias'; // Definindo o nome da aba "materias"
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzQwBVqp1Z1OIxusuPrHMJiasYSJXmwv-RurOVDcYRyXEAUXco65rETiWF82AOf33u-dQ/exec';
 
-      function showToast(message, type = 'success') {
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.innerText = message;
-        container.appendChild(toast);
-        setTimeout(() => {
-          toast.style.opacity = '0';
-          setTimeout(() => toast.remove(), 300);
-        }, 3000);
-      }
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerText = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
 
-      function carregarmaterias() {
-        const url = `${scriptURL}?sheet=${sheetName}`;
-        fetch(url)
-          .then(res => res.json())
-          .then(data => {
-            const tbody = document.querySelector('#materiasTable tbody');
-            tbody.innerHTML = '';
-            for (let i = 1; i < data.length; i++) {
-              const [id, descricao, status, anoLetivo] = data[i]; 
-              const row = document.createElement('tr');
-              row.innerHTML = `
-                <td>${id}</td>
-                <td><input type="text" value="${descricao}"></td>
-                <td><input type="checkbox" ${status === true ? 'checked' : ''}></td>
-                <td><input type="text" value="${anoLetivo ?? ''}"></td> 
-                <td>
-                  <button onclick="atualizar(
-                    ${id}, 
-                    this.closest('tr').children[1].children[0].value, 
-                    this.closest('tr').children[2].children[0].checked,
-                    this.closest('tr').children[3].children[0].value
-                  )">Salvar</button>
-                </td>
-              `;
-              tbody.appendChild(row);
-            }
-          })
-          .catch(error => {
-            console.error('Erro ao carregar materias:', error);
-            showToast("Erro ao carregar matérias!", "error");
-          });
-      }
-
-      function atualizar(id, descricao, status, anoLetivo) {
-        const params = new URLSearchParams({
-          action: 'update',
-          sheet: sheetName,
-          id,
-          description: descricao ?? '',
-          status: status ?? false,
-          anoLetivo: anoLetivo ?? ''
+    function carregarMaterias() {
+      fetch(scriptURL)
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.querySelector('#materiasTable tbody');
+          tbody.innerHTML = '';
+          for (let i = 1; i < data.length; i++) {
+            const [id, descricao, anoLetivo, status] = data[i]; 
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${id}</td>
+              <td><input type="text" value="${descricao}"></td>
+              <td><input type="text" value="${anoLetivo ?? ''}"></td> 
+              <td><input type="checkbox" ${status === true ? 'checked' : ''}></td>
+              <td>
+                <button onclick="atualizar(
+                  ${id}, 
+                  this.closest('tr').children[1].children[0].value, 
+                  this.closest('tr').children[2].children[0].value,
+                  this.closest('tr').children[3].children[0].checked
+                )">Salvar</button>
+              </td>
+            `;
+            tbody.appendChild(row);
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao carregar matérias:', error);
+          showToast("Erro ao carregar matérias!", "error");
         });
+    }
 
-        fetch(scriptURL, { method: 'POST', body: params })
-          .then(res => res.text
+    function atualizar(id, descricao, anoLetivo, status) {
+      const params = new URLSearchParams({
+        action: 'update',
+        id,
+        description: descricao ?? '',
+        anoLetivo: anoLetivo ?? '',
+        status: status ?? false    
+      });
+
+      fetch(scriptURL, { method: 'POST', body: params })
+        .then(res => res.text())
+        .then(() => {
+          showToast("Matéria atualizada com sucesso!", "success");
+          carregarMaterias();
+        })
+        .catch(error => {
+          console.error('Erro ao atualizar matéria:', error);
+          showToast("Erro ao atualizar matéria!", "error");
+        });
+    }
+
+    function criarMaterias() {
+      const descricao = document.getElementById('novaDescricao').value;
+      const anoLetivo = document.getElementById('novoAnoLetivo').value;
+      const status = document.getElementById('novaStatus').checked;
+
+      if (!descricao) {
+        showToast("Descrição é obrigatória!", "error");
+        return;
+      }
+
+      const params = new URLSearchParams({
+        action: 'create',
+        description: descricao,
+        anoLetivo,
+        status
+      });
+
+      fetch(scriptURL, { method: 'POST', body: params })
+        .then(res => res.text())
+        .then(() => {
+          showToast("Matéria criada com sucesso!", "success");
+          document.getElementById('novaDescricao').value = '';
+          document.getElementById('novoAnoLetivo').value = '';
+          document.getElementById('novaStatus').checked = true;
+          carregarMaterias();
+        })
+        .catch(error => {
+          console.error('Erro ao criar matéria:', error);
+          showToast("Erro ao criar matéria!", "error");
+        });
+    }
+
+    window.onload = carregarMaterias;
+  </script>
+
+  <footer>
+    <p>© 2025 Shiv BI. Todos os direitos reservados.</p>
+  </footer>
+</body>
+</html>
