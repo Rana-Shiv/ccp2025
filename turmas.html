@@ -43,7 +43,7 @@
     function showToast(message, type = 'success') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
-      toast.className = toast ${type};
+      toast.className = 'toast ${type}';
       toast.innerText = message;
       container.appendChild(toast);
       setTimeout(() => {
@@ -61,7 +61,7 @@
           for (let i = 1; i < data.length; i++) {
             const [id, descricao, anoLetivo, status] = data[i]; 
             const row = document.createElement('tr');
-  row.innerHTML = 
+  row.innerHTML = '
     <td>${id}</td>
     <td><input type="text" value="${descricao}"></td>
     <td><input type="text" value="${anoLetivo ?? ''}"></td> 
@@ -73,7 +73,7 @@
         this.closest('tr').children[2].children[0].value,
         this.closest('tr').children[3].children[0].checked
       )">Salvar</button>
-    </td>
+    </td>'
   ;
   tbody.appendChild(row);
 }
