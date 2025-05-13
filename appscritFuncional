@@ -1,0 +1,60 @@
+const SHEET_NAME = 'turmas';
+
+function doGet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  const data = sheet.getDataRange().getValues();
+
+  // Retorna os dados com cabeçalhos CORS
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  const action = e.parameter.action;
+
+  if (!action) {
+    return ContentService.createTextOutput("Ação não especificada");
+  }
+
+  if (action === 'update') {
+    const id = parseInt(e.parameter.id, 10);
+    const description = e.parameter.description ?? '';
+    const anoLetivo = e.parameter.anoLetivo ?? '';
+    const status = e.parameter.status === 'true';
+    
+
+    const data = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      if (parseInt(data[i][0], 10) === id) {
+        // Coluna 2: descrição
+        sheet.getRange(i + 1, 2).setValue(description);
+        // Coluna 3: ano letivo
+        sheet.getRange(i + 1, 3).setValue(anoLetivo);
+        // Coluna 4: status
+        sheet.getRange(i + 1, 4).setValue(status);
+        return ContentService.createTextOutput("Atualizado");
+      }
+    }
+    return ContentService.createTextOutput("ID não encontrado");
+  }
+
+  if (action === 'create') {
+    const description = e.parameter.description ?? '';
+    const anoLetivo = e.parameter.anoLetivo ?? '';
+    const status = e.parameter.status === 'true';
+
+    if (!description) {
+      return ContentService.createTextOutput("Descrição obrigatória");
+    }
+
+    const lastRow = sheet.getLastRow();
+    const newId = lastRow; // ID baseado no número da linha
+
+    sheet.appendRow([newId, description, anoLetivo, status]);
+    return ContentService.createTextOutput("Criado");
+  }
+
+  return ContentService.createTextOutput("Ação inválida");
+}
