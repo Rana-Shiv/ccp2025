@@ -12,7 +12,7 @@
   </header>
 
   <h2>Turmas</h2>
-  <table id="turmasTable">
+  <table id="TurmasTable">
     <thead>
       <tr>
         <th>ID</th>
@@ -28,8 +28,7 @@
   <div class="linha">
     <h3 style="margin: 0;">Nova Turma</h3>
     <input type="text" id="novaDescricao" placeholder="Descrição">
-    <label style="display: flex; align-items: center; gap: 5px;"></label>
-    <input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
+    <input type="text" id="novoAnoLetivo" placeholder="Ano Letivo">
     <input type="checkbox" id="novaStatus" checked> Ativo
     <button onclick="criarTurma()">Criar</button>
   </div>
@@ -53,13 +52,13 @@
     }
 
     function carregarTurmas() {
-      fetch(scriptURL)
+      fetch(scriptURL + '?type=turmas')
         .then(res => res.json())
         .then(data => {
-          const tbody = document.querySelector('#turmasTable tbody');
+          const tbody = document.querySelector('#TurmasTable tbody');
           tbody.innerHTML = '';
           for (let i = 1; i < data.length; i++) {
-            const [id, descricao, anoLetivo, status] = data[i]; 
+            const [id, descricao, anoLetivo, status] = data[i];
             const row = document.createElement('tr');
             row.innerHTML = `
               <td>${id}</td>
@@ -67,7 +66,7 @@
               <td><input type="text" value="${anoLetivo ?? ''}"></td> 
               <td><input type="checkbox" ${status === true ? 'checked' : ''}></td>
               <td>
-                <button onclick="atualizar(
+                <button onclick="atualizarTurma(
                   ${id}, 
                   this.closest('tr').children[1].children[0].value, 
                   this.closest('tr').children[2].children[0].value,
@@ -79,14 +78,15 @@
           }
         })
         .catch(error => {
-          console.error('Erro ao carregar turmas:', error);
-          showToast("Erro ao carregar turmas!", "error");
+          console.error('Erro ao carregar Turmas:', error);
+          showToast("Erro ao carregar Turmas!", "error");
         });
     }
 
-    function atualizar(id, descricao, anoLetivo, status) {
+    function atualizarTurma(id, descricao, anoLetivo, status) {
       const params = new URLSearchParams({
         action: 'update',
+        type: 'turmas',
         id,
         description: descricao ?? '',
         anoLetivo: anoLetivo ?? '',
@@ -117,6 +117,7 @@
 
       const params = new URLSearchParams({
         action: 'create',
+        type: 'turmas',
         description: descricao,
         anoLetivo,
         status
