@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Colégio Cooperativista de Poá | Matérias</title>
+  <title>Colégio Cooperativista de Poá | Materias</title>
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
@@ -11,8 +11,8 @@
     <button class="login-button" onclick="window.location.href='menu.html'">Voltar</button>
   </header>
 
-  <h2>Cadastro Geral de Matérias</h2>
-  <table id="materiasTable">
+  <h2>Materias</h2>
+  <table id="MateriasTable">
     <thead>
       <tr>
         <th>ID</th>
@@ -26,19 +26,19 @@
   </table>
 
   <div class="linha">
-    <h3 style="margin: 0;">Nova Matéria</h3>
+    <h3 style="margin: 0;">Nova Turma</h3>
     <input type="text" id="novaDescricao" placeholder="Descrição">
     <label style="display: flex; align-items: center; gap: 5px;"></label>
     <input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
     <input type="checkbox" id="novaStatus" checked> Ativo
-    <button onclick="criarMateria()">Criar</button>
+    <button onclick="criarTurma()">Criar</button>
   </div>
 
   <!-- Toast container -->
   <div id="toast-container"></div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzQwBVqp1Z1OIxusuPrHMJiasYSJXmwv-RurOVDcYRyXEAUXco65rETiWF82AOf33u-dQ/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzpE3hFywnrTg9PmDY0YAD14-LaIKc26NtLac0EdjIJim3quksDybXeY0UCbz3py3ua/exec';
 
     function showToast(message, type = 'success') {
       const container = document.getElementById('toast-container');
@@ -56,7 +56,7 @@
       fetch(scriptURL)
         .then(res => res.json())
         .then(data => {
-          const tbody = document.querySelector('#materiasTable tbody');
+          const tbody = document.querySelector('#MateriasTable tbody');
           tbody.innerHTML = '';
           for (let i = 1; i < data.length; i++) {
             const [id, descricao, anoLetivo, status] = data[i]; 
@@ -79,8 +79,8 @@
           }
         })
         .catch(error => {
-          console.error('Erro ao carregar matérias:', error);
-          showToast("Erro ao carregar matérias!", "error");
+          console.error('Erro ao carregar Materias:', error);
+          showToast("Erro ao carregar Materias!", "error");
         });
     }
 
@@ -96,16 +96,16 @@
       fetch(scriptURL, { method: 'POST', body: params })
         .then(res => res.text())
         .then(() => {
-          showToast("Matéria atualizada com sucesso!", "success");
+          showToast("Turma atualizada com sucesso!", "success");
           carregarMaterias();
         })
         .catch(error => {
-          console.error('Erro ao atualizar matéria:', error);
-          showToast("Erro ao atualizar matéria!", "error");
+          console.error('Erro ao atualizar turma:', error);
+          showToast("Erro ao atualizar turma!", "error");
         });
     }
 
-    function criarMaterias() {
+    function criarTurma() {
       const descricao = document.getElementById('novaDescricao').value;
       const anoLetivo = document.getElementById('novoAnoLetivo').value;
       const status = document.getElementById('novaStatus').checked;
@@ -125,15 +125,15 @@
       fetch(scriptURL, { method: 'POST', body: params })
         .then(res => res.text())
         .then(() => {
-          showToast("Matéria criada com sucesso!", "success");
+          showToast("Turma criada com sucesso!", "success");
           document.getElementById('novaDescricao').value = '';
           document.getElementById('novoAnoLetivo').value = '';
           document.getElementById('novaStatus').checked = true;
           carregarMaterias();
         })
         .catch(error => {
-          console.error('Erro ao criar matéria:', error);
-          showToast("Erro ao criar matéria!", "error");
+          console.error('Erro ao criar turma:', error);
+          showToast("Erro ao criar turma!", "error");
         });
     }
 
