@@ -26,12 +26,11 @@
   </table>
 
   <div class="linha">
-    <h3 style="margin: 0;">Nova Turma</h3>
+    <h3 style="margin: 0;">Nova Matéria</h3>
     <input type="text" id="novaDescricao" placeholder="Descrição">
-    <label style="display: flex; align-items: center; gap: 5px;"></label>
-    <input type="text" id="novoAnoLetivo" placeholder="Ano Letivo"> 
+    <input type="text" id="novoAnoLetivo" placeholder="Ano Letivo">
     <input type="checkbox" id="novaStatus" checked> Ativo
-    <button onclick="criarTurma()">Criar</button>
+    <button onclick="criarMateria()">Criar</button>
   </div>
 
   <!-- Toast container -->
@@ -53,13 +52,13 @@
     }
 
     function carregarMaterias() {
-      fetch(scriptURL)
+      fetch(scriptURL + '?type=materias')
         .then(res => res.json())
         .then(data => {
           const tbody = document.querySelector('#MateriasTable tbody');
           tbody.innerHTML = '';
           for (let i = 1; i < data.length; i++) {
-            const [id, descricao, anoLetivo, status] = data[i]; 
+            const [id, descricao, anoLetivo, status] = data[i];
             const row = document.createElement('tr');
             row.innerHTML = `
               <td>${id}</td>
@@ -67,7 +66,7 @@
               <td><input type="text" value="${anoLetivo ?? ''}"></td> 
               <td><input type="checkbox" ${status === true ? 'checked' : ''}></td>
               <td>
-                <button onclick="atualizar(
+                <button onclick="atualizarMateria(
                   ${id}, 
                   this.closest('tr').children[1].children[0].value, 
                   this.closest('tr').children[2].children[0].value,
@@ -84,9 +83,10 @@
         });
     }
 
-    function atualizar(id, descricao, anoLetivo, status) {
+    function atualizarMateria(id, descricao, anoLetivo, status) {
       const params = new URLSearchParams({
         action: 'update',
+        type: 'materias',
         id,
         description: descricao ?? '',
         anoLetivo: anoLetivo ?? '',
@@ -96,16 +96,16 @@
       fetch(scriptURL, { method: 'POST', body: params })
         .then(res => res.text())
         .then(() => {
-          showToast("Turma atualizada com sucesso!", "success");
+          showToast("Matéria atualizada com sucesso!", "success");
           carregarMaterias();
         })
         .catch(error => {
-          console.error('Erro ao atualizar turma:', error);
-          showToast("Erro ao atualizar turma!", "error");
+          console.error('Erro ao atualizar matéria:', error);
+          showToast("Erro ao atualizar matéria!", "error");
         });
     }
 
-    function criarTurma() {
+    function criarMateria() {
       const descricao = document.getElementById('novaDescricao').value;
       const anoLetivo = document.getElementById('novoAnoLetivo').value;
       const status = document.getElementById('novaStatus').checked;
@@ -117,6 +117,7 @@
 
       const params = new URLSearchParams({
         action: 'create',
+        type: 'materias',
         description: descricao,
         anoLetivo,
         status
@@ -125,15 +126,15 @@
       fetch(scriptURL, { method: 'POST', body: params })
         .then(res => res.text())
         .then(() => {
-          showToast("Turma criada com sucesso!", "success");
+          showToast("Matéria criada com sucesso!", "success");
           document.getElementById('novaDescricao').value = '';
           document.getElementById('novoAnoLetivo').value = '';
           document.getElementById('novaStatus').checked = true;
           carregarMaterias();
         })
         .catch(error => {
-          console.error('Erro ao criar turma:', error);
-          showToast("Erro ao criar turma!", "error");
+          console.error('Erro ao criar matéria:', error);
+          showToast("Erro ao criar matéria!", "error");
         });
     }
 
