@@ -1,0 +1,60 @@
+const SHEET_TURMAS = 'turmas';
+const SHEET_MATERIAS = 'materias';
+
+function doGet(e) {
+  const sheetName = e.parameter.type === 'materias' ? SHEET_MATERIAS : SHEET_TURMAS;
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  const data = sheet.getDataRange().getValues();
+
+  // Retorna os dados com cabeçalhos CORS
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  const action = e.parameter.action;
+  const type = e.parameter.type;
+  const sheetName = type === 'materias' ? SHEET_MATERIAS : SHEET_TURMAS;
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+
+  if (!action) {
+    return ContentService.createTextOutput("Ação não especificada");
+  }
+
+  if (action === 'update') {
+    const id = parseInt(e.parameter.id, 10);
+    const description = e.parameter.description ?? '';
+    const anoLetivo = e.parameter.anoLetivo ?? '';
+    const status = e.parameter.status === 'true';
+    
+    const data = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      if (parseInt(data[i][0], 10) === id) {
+        sheet.getRange(i + 1, 2).setValue(description);  // Descrição
+        sheet.getRange(i + 1, 3).setValue(anoLetivo);   // Ano Letivo
+        sheet.getRange(i + 1, 4).setValue(status);      // Status
+        return ContentService.createTextOutput("Atualizado");
+      }
+    }
+    return ContentService.createTextOutput("ID não encontrado");
+  }
+
+  if (action === 'create') {
+    const description = e.parameter.description ?? '';
+    const anoLetivo = e.parameter.anoLetivo ?? '';
+    const status = e.parameter.status === 'true';
+
+    if (!description) {
+      return ContentService.createTextOutput("Descrição obrigatória");
+    }
+
+    const lastRow = sheet.getLastRow();
+    const newId = lastRow + 1; // ID baseado no número da linha
+
+    sheet.appendRow([newId, description, anoLetivo, status]);
+    return ContentService.createTextOutput("Criado");
+  }
+
+  return ContentService.createTextOutput("Ação inválida");
+}
