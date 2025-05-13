@@ -1,22 +1,100 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Colégio Cooperativista de Poá</title>
-  <link rel="stylesheet" href="home.css" />
-</head> 
+  <meta charset="UTF-8">
+  <title>Colégio Cooperativista de Poá | Professores</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
 <body>
   <header>
     <h1>Colégio Cooperativista de Poá</h1>
-        <button class="login-button" onclick="window.location.href='menu.html'">Voltar</button>
+    <button class="login-button" onclick="window.location.href='menu.html'">Voltar</button>
   </header>
 
-  <main>
-    
-    <h2 style="text-align: center; margin-top: 1rem;">Em construção!</h2>
-    
-  </main>
+  <h2>Professores</h2>
+  <table id="ProfessoresTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Ano Letivo</th>
+        <th>Status</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="linha">
+    <h3 style="margin: 0;">Novo Professor</h3>
+    <input type="text" id="novoNome" placeholder="Nome">
+    <label style="display: flex; align-items: center; gap: 5px;"></label>
+    <input type="text" id="novaDisciplina" placeholder="Disciplina"> 
+    <input type="checkbox" id="novoStatus" checked> Ativo
+    <button onclick="criarProfessor()">Criar</button>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzpE3hFywnrTg9PmDY0YAD14-LaIKc26NtLac0EdjIJim3quksDybXeY0UCbz3py3ua/exec';
+
+    function carregarProfessores() {
+      fetch(scriptURL + '?type=professores')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.querySelector('#ProfessoresTable tbody');
+          tbody.innerHTML = '';
+          for (let i = 1; i < data.length; i++) {
+            const [id, nome, disciplina, status] = data[i];
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${id}</td>
+              <td><input type="text" value="${nome}"></td>
+              <td><input type="text" value="${disciplina}"></td>
+              <td><input type="checkbox" ${status === true ? 'checked' : ''}></td>
+              <td>
+                <button onclick="atualizar(
+                  ${id},
+                  this.closest('tr').children[1].children[0].value,
+                  this.closest('tr').children[2].children[0].value,
+                  this.closest('tr').children[3].children[0].checked
+                )">Salvar</button>
+              </td>
+            `;
+            tbody.appendChild(row);
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao carregar Professores:', error);
+        });
+    }
+
+    function criarProfessor() {
+      const nome = document.getElementById('novoNome').value;
+      const disciplina = document.getElementById('novaDisciplina').value;
+      const status = document.getElementById('novoStatus').checked;
+
+      const params = new URLSearchParams({
+        action: 'create',
+        type: 'professores',
+        description: nome,
+        anoLetivo: disciplina,
+        status
+      });
+
+      fetch(scriptURL, { method: 'POST', body: params })
+        .then(res => res.text())
+        .then(() => {
+          carregarProfessores();
+        })
+        .catch(error => {
+          console.error('Erro ao criar professor:', error);
+        });
+    }
+
+    window.onload = carregarProfessores;
+  </script>
 
   <footer>
     <p>© 2025 Shiv BI. Todos os direitos reservados.</p>
